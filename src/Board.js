@@ -97,7 +97,7 @@ class Board extends React.Component {
                 for(let j = 0; j < WIDTH; j++) {
                     if (((j == c-1 || j == c+1) && i == r) || ((i == r-1 || i == r+1) && j == c)) {
                         var neighbour = oldGrid[i][j];
-                        if (!neighbour.isVisited && !neighbour.isWall) {
+                        if (!neighbour.isVisited && !neighbour.isWall) { //this won't work i think because Node is now a react component and isVisited, etc. are in state
                             neighbour.distance = curr.distance + 1;
                             neighbour.prevNode = curr;
                         }
@@ -122,7 +122,7 @@ class Board extends React.Component {
         for (let i = 0; i < HEIGHT; i++){
             var newRow = [];
             for (let j = 0; j < WIDTH; j++) {
-                var newNode = new Node(i, j);
+                var newNode = <Node row={i} col={j}></Node>;
                 newRow.push(newNode);
             }
             newBoard.push(newRow);
@@ -138,7 +138,7 @@ class Board extends React.Component {
                 {/* grid.map((row) =>
                 return (
                     row.map(element) =>
-                    return <Node></Node>
+                    return <Node row={i} col={j}></Node>
                 )) */}
             </div>
         )
