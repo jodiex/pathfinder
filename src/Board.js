@@ -3,22 +3,14 @@ import React from 'react'
 const WIDTH = 50;
 const HEIGHT = 20;
 
-class Node extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            row: this.props.row,
-            col: this.props.col,
-            distance: Infinity,
-            isWall: false,
-            isVisited: false,
-            prevNode: null,
-        };
-    }
-    render() {
-        return (
-            <div className="node"></div>
-        )
+class Node {
+    construtor (r, c){
+        this.row = r;
+        this.col = c;
+        this.distance= Infinity;
+        this.isWall = false;
+        this.isVisited= false;
+        this.prevNode = null;
     }
 }
 
@@ -41,38 +33,37 @@ class Board extends React.Component {
     findShortestPath() {
         var curr = this.state.startNode;
         var end = this.state.endNode;
-        curr.setState({distance: 0});
-        this.setState({startNode: curr});
+        var {grid} = this.state;
+        grid[curr.row][curr.col].distance = 0;
         var visited = [];
-        var unvisited = this.getAllNodes();
+        var unvisited = this.getAllNodes(grid);
         while (unvisited.length > 0){
-            if (curr.state.row === end.state.row && curr.state.col === end.state.col) {
+            if (curr.row === end.row && curr.col === end.col) {
                 return visited;
             }
-            if (curr.state.isWall){
+            if (curr.isWall){
                 continue;
             }
-            curr.setState({isVisited: true});
-            visited.push(curr);
-            this.updateNeighbours(curr); // add + 1 to the distance of its neighbours and set prevNode to curr
+            grid[curr.row][curr.col].isVisited = true;
+            visited.push(grid[curr.row][curr.col]);
+            grid = this.updateNeighbours(curr, grid); // add + 1 to the distance of its neighbours and set prevNode to curr
             unvisited = sortByDistance(unvisited);
             curr = unvisited.shift();
         }
         return visited;
     }
-    getAllNodes(){
+    getAllNodes(grid){
         var allNodes = [];
         for (let i = 0; i < HEIGHT; i++) {
             for (let j = 0; j < WIDTH; j++) {
-                allNodes.push(this.state.grid[i][j]);
+                allNodes.push(grid[i][j]);
             }
         }
         return allNodes;
     }
-    updateNeighbours(curr){
+    updateNeighbours(curr, oldGrid){
         var r = curr.row;
         var c = curr.col;
-        var oldGrid = this.state.grid;
         var newGrid = oldGrid;
         var neighbour = null;
         if (r < HEIGHT) {
@@ -91,7 +82,7 @@ class Board extends React.Component {
             neighbour = updateDistanceAndPrevNode(r, c-1, oldGrid, curr);
             newGrid[r][c-1] = neighbour;
         }
-        this.setState({grid: newGrid});
+        return newGrid;
         // for (let i = 0; i < HEIGHT; i++){
         //     if (i < r-1 && i > r+1) {
         //         var row = oldGrid[r];
@@ -149,16 +140,14 @@ class Board extends React.Component {
 
 function updateDistanceAndPrevNode(r, c, oldGrid, curr) {
     var neighbour = oldGrid[r][c];
-    if (!neighbour.state.isVisited && !neighbour.state.isWall) {
-        neighbour.setState({
-            distance: curr.state.distance + 1,
-            prevNode: curr,
-        });
+    if (!neighbour.isVisited && !neighbour.isWall) {
+        neighbour.distance = curr.distance + 1;
+        neighbour.prevNode = curr;
     }
     return neighbour;
 }
 function sortByDistance(arr) {
-    arr.sort(function(a,b) { return a.state.distance - b.state.distance; });
+    arr.sort(function(a,b) { return a.distance - b.distance; });
     return arr;
 }
 
