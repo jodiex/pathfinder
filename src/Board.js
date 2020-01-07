@@ -31,14 +31,20 @@ class Board extends React.Component {
             endNode: {},
         };
 
-        this.visualize = this.visualize.bind(this);
+        //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
+        //this.findShortestPath = this.findShortestPath.bind(this);
     }
-    visualize() {
+    visualize(){
+        var nodesInOrder = this.findShortestPath();
+        // animation function
+    }
+    findShortestPath() {
         var curr = this.state.startNode;
         var end = this.state.endNode;
         curr.setState({distance: 0});
+        this.setState({startNode: curr});
         var visited = [];
-        var unvisited = getAllNodes();
+        var unvisited = this.getAllNodes();
         while (unvisited.length > 0){
             if (curr.state.row === end.state.row && curr.state.col === end.state.col) {
                 return visited;
@@ -48,10 +54,20 @@ class Board extends React.Component {
             }
             curr.setState({isVisited: true});
             visited.push(curr);
-            updateNeighbours(curr); // add + 1 to the distance of its neighbours and set prevNode to curr
+            this.updateNeighbours(curr); // add + 1 to the distance of its neighbours and set prevNode to curr
             unvisited = sortByDistance(unvisited);
             curr = unvisited.shift();
         }
+        return visited;
+    }
+    getAllNodes(){
+        var allNodes = [];
+        for (let i = 0; i < HEIGHT; i++) {
+            for (let j = 0; j < WIDTH; j++) {
+                allNodes.push(this.state.grid[i][j]);
+            }
+        }
+        return allNodes;
     }
     updateNeighbours(curr){
         var r = curr.row;
@@ -60,38 +76,22 @@ class Board extends React.Component {
         var newGrid = oldGrid;
         var neighbour = null;
         if (r < HEIGHT) {
-            neighbour = oldGrid[r+1][c];
-            if (!neighbour.state.isVisited && !neighbour.state.isWall) {
-                neighbour.setState({
-                    distance: curr.state.distance + 1,
-                    prevNode: curr,
-                });
-            }
+            neighbour = updateDistanceAndPrevNode(r+1, c, oldGrid, curr);
             newGrid[r+1][c] = neighbour;
         }
         if (r > 0) {
-            neighbour = oldGrid[r-1][c];
-            if (!neighbour.isVisited && !neighbour.isWall) {
-                neighbour.distance = curr.distance + 1;
-                neighbour.prevNode = curr;
-            }
+            neighbour = updateDistanceAndPrevNode(r-1, c, oldGrid, curr);
+            newGrid[r-1][c] = neighbour;
         }
         if (c < WIDTH) {
-            neighbour = oldGrid[r][c+1];
-            if (!neighbour.isVisited && !neighbour.isWall) {
-                neighbour.distance = curr.distance + 1;
-                neighbour.prevNode = curr;
-            }
+            neighbour = updateDistanceAndPrevNode(r, c+1, oldGrid, curr);
+            newGrid[r][c+1] = neighbour;
         }
         if (c > 0) {
-            neighbour = oldGrid[r][c-1];
-            if (!neighbour.isVisited && !neighbour.isWall) {
-                neighbour.distance = curr.distance + 1;
-                neighbour.prevNode = curr;
-            }
+            neighbour = updateDistanceAndPrevNode(r, c-1, oldGrid, curr);
+            newGrid[r][c-1] = neighbour;
         }
-
-
+        this.setState({grid: newGrid});
         // for (let i = 0; i < HEIGHT; i++){
         //     if (i < r-1 && i > r+1) {
         //         var row = oldGrid[r];
@@ -119,11 +119,6 @@ class Board extends React.Component {
         // }
         // this.setState({grid: newGrid});
     }
-
-    sortByDistance(arr) {
-        arr.sort(nodeGreaterThan(a,b) { return a.state.distance - b.state.distance; });
-        return arr;
-    }
     componentDidMount() {
         var newBoard = [];
         for (let i = 0; i < HEIGHT; i++){
@@ -150,6 +145,21 @@ class Board extends React.Component {
             </div>
         )
     }
+}
+
+function updateDistanceAndPrevNode(r, c, oldGrid, curr) {
+    var neighbour = oldGrid[r][c];
+    if (!neighbour.state.isVisited && !neighbour.state.isWall) {
+        neighbour.setState({
+            distance: curr.state.distance + 1,
+            prevNode: curr,
+        });
+    }
+    return neighbour;
+}
+function sortByDistance(arr) {
+    arr.sort(function(a,b) { return a.state.distance - b.state.distance; });
+    return arr;
 }
 
 export default Board;
