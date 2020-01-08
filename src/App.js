@@ -4,7 +4,6 @@ import {OptionPanel} from './components/OptionPanel.jsx'
 //import Board from './Board'
 
 
-
   function App() {
     const [startXCoord, setStartXCoord] = useState(0); 
     const [startYCoord, setStartYCoord] = useState(0);
