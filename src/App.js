@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Grid, Label } from 'semantic-ui-react'
 import {OptionPanel} from './components/OptionPanel.jsx'
+//import Board from './Board'
+
+
 
   function App() {
-
+    const [startXCoord, setStartXCoord] = useState(0); 
+    const [startYCoord, setStartYCoord] = useState(0);
+    const [endXCoord, setEndXCoord] = useState(0); 
+    const [endYCoord, setEndYCoord] = useState(0); 
     return (
       <div className="App">
         <Grid divided>
@@ -13,7 +19,14 @@ import {OptionPanel} from './components/OptionPanel.jsx'
             </Grid.Column>
   
             <Grid.Column floated={"right"} width={4}>
-              <OptionPanel></OptionPanel>
+              <OptionPanel
+              {...{
+                startXCoord, setStartXCoord, 
+                startYCoord, setStartYCoord, 
+                endXCoord, setEndXCoord, 
+                endYCoord, setEndYCoord
+              }}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>
