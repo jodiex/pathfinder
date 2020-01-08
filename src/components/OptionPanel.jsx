@@ -1,8 +1,14 @@
 import React from 'react';
-import {Segment, Header, Dropdown, Label, Divider, Input, Button, Icon} from 'semantic-ui-react';
+import {Segment, Header, Dropdown, Label, Divider, Button, Icon} from 'semantic-ui-react';
 import './css/OptionPanel.css';
 
-function OptionPanel() {
+
+function OptionPanel({
+    startXCoord, setStartXCoord,
+    startYCoord, setStartYCoord, 
+    endXCoord, setEndXCoord,
+    endYCoord, setEndYCoord
+}) {
     const algo = [
     {
         key: 0,
@@ -20,8 +26,25 @@ function OptionPanel() {
         value: 'A-Star'
     }
     ]
-    
-    
+    const coordinates = [
+        {
+            key: 0,
+            text: 0, 
+            value: 0
+        },
+        {
+            key: 1,
+            text: 1, 
+            value: 1
+        },
+        {
+            key: 2, 
+            text: 2, 
+            value: 2 
+        }
+    ]
+
+
     return(
         <div className="container">
         <Segment raised>
@@ -37,14 +60,55 @@ function OptionPanel() {
             <Divider/>
             <div className="coordinates">
                 <Header id='startNode' as='h2'> Start Node Coordinates </Header>
-                <Input id='xcoord' label="x:" placeholder="0" />
-                <br/><br/>
-                <Input id='ycoord' label="y:" placeholder="0" />
+                <Label
+                >
+                X Coordinate
+                <Dropdown
+                    placeholder='0'
+                    button
+                    fluid
+                    selection
+                    options={coordinates}
+                    onChange={(e, {value}) => setStartXCoord({startXCoord: {value}=value})}
+                />
+                </Label>
+                <Label>
+                Y Coordinate
+                <Dropdown
+                    placeholder='0'
+                    button
+                    fluid
+                    selection
+                    options={coordinates}
+                    onChange={(e, {value}) => setStartYCoord({startYCoord: {value}=value})}
+                />
+                </Label>
 
                 <Header id='endNode' as='h2'> End Node Coordinates </Header>
-                <Input id='xcoord' label="x:" placeholder="0" />
+
+                <Label>
+                X Coordinate
+                <Dropdown
+                    placeholder='0'
+                    button
+                    fluid
+                    selection
+                    options={coordinates}
+                    onChange={(e, {value}) => setEndXCoord({endXCoord: {value}=value})}
+                />
+                </Label>
+                <Label>
+                Y Coordinate
+                <Dropdown
+                    placeholder='0'
+                    button
+                    fluid
+                    selection
+                    options={coordinates}
+                    onChange={(e, {value}) => setEndYCoord({endYCoord: {value}=value})}
+                />
+                </Label>
                 <br/><br/>
-                <Input id='ycoord' label="y:" placeholder="0" />
             </div>
             <Divider />
             <Button.Group vertical widths='5' id='buttonGroup'>
