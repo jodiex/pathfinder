@@ -1,7 +1,8 @@
 import React from 'react'
-
+import './css/Board.css'
 const WIDTH = 50;
 const HEIGHT = 20;
+
 
 class Node {
     construtor (r, c){
@@ -19,8 +20,8 @@ class Board extends React.Component {
         super(props);
         this.state = {
             grid : [],
-            startNode: {}, // i don't think start/end node should be in state?
-            endNode: {},
+            // startNode: {},
+            // endNode: {}
         };
 
         //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
@@ -122,18 +123,31 @@ class Board extends React.Component {
         }
         this.setState({grid: newBoard});
     }
-    render() {
-        const row = <div className="row">
-            {()}
-        </div>;
+
+    createGrid(x, y){
+        /**
+            should find a way to use the mapping function instead of a for loop of divs 
+            each child should get a keyID too 
+        */
+        let table = []
+        let keyIndex = 0; 
+        for (let i = 0; i < x; i++){
+            let children = []
+            for (let j = 0; j < y; j++){
+                keyIndex ++; 
+                children.push(<td><div id="unVisited" key={keyIndex}>{`(${i},${j})`}</div></td>)
+            }
+            table.push(<tr>{children}</tr>)
+        }
+        return table
+    }
+
+
+    render() { 
         return (
-            <div className="board">
-                {/* grid.map((row) =>
-                return (
-                    row.map(element) =>
-                    return <Node row={i} col={j}></Node>
-                )) */}
-            </div>
+            <table>
+                {this.createGrid(8,10)}
+            </table>
         )
     }
 }

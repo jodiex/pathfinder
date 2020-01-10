@@ -4,10 +4,10 @@ import './css/OptionPanel.css';
 
 
 function OptionPanel({
-    startXCoord, setStartXCoord,
-    startYCoord, setStartYCoord, 
-    endXCoord, setEndXCoord,
-    endYCoord, setEndYCoord
+    setStartXCoord,
+    setStartYCoord, 
+    setEndXCoord,
+    setEndYCoord
 }) {
     const algo = [
     {
