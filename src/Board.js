@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const WIDTH = 50;
 const HEIGHT = 20;
@@ -19,7 +19,7 @@ class Board extends React.Component {
         super(props);
         this.state = {
             grid : [],
-            startNode: {}, // i don't think start/end node should be in state?
+            startNode: {},
             endNode: {},
         };
 
@@ -29,6 +29,7 @@ class Board extends React.Component {
     visualize(){
         var nodesInOrder = this.findShortestPath();
         // animation function
+        animate(nodesInOrder);
     }
     findShortestPath() {
         var curr = this.state.startNode;
@@ -46,7 +47,8 @@ class Board extends React.Component {
             }
             grid[curr.row][curr.col].isVisited = true;
             visited.push(grid[curr.row][curr.col]);
-            grid = this.updateNeighbours(curr, grid); // add + 1 to the distance of its neighbours and set prevNode to curr
+            // add + 1 to the distance of its neighbours and set prevNode to curr
+            grid = this.updateNeighbours(curr, grid);
             unvisited = sortByDistance(unvisited);
             curr = unvisited.shift();
         }
@@ -109,6 +111,9 @@ class Board extends React.Component {
         //     }
         // }
         // this.setState({grid: newGrid});
+    }
+    animate(nodesInOrder){
+        var class = "visited";
     }
     componentDidMount() {
         var newBoard = [];
