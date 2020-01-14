@@ -1,7 +1,12 @@
 import React from 'react'
 import './css/Board.css'
+import {NodeRender} from './Node.jsx'
 const WIDTH = 50;
 const HEIGHT = 20;
+const START_ROW = 1;
+const START_COLUMN = 2; 
+const END_ROW = 4;
+const END_COLUMN = 3; 
 
 
 class Node {
@@ -9,7 +14,7 @@ class Node {
         this.row = r;
         this.col = c;
         this.distance= Infinity;
-        this.isWall = false;
+        // this.isWall = false;
         this.isVisited= false;
         this.prevNode = null;
     }
@@ -20,8 +25,11 @@ class Board extends React.Component {
         super(props);
         this.state = {
             grid : [],
-            // startNode: {},
-            // endNode: {}
+            //destructure and supposed to be in props 
+            // START_ROW: startXCoord,
+            // START_COLUMN: startYCoord,
+            // END_ROW: endXCoord,
+            // END_COLUMN: endYCoord
         };
 
         //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
@@ -111,45 +119,49 @@ class Board extends React.Component {
         // }
         // this.setState({grid: newGrid});
     }
+    //need to put isVisited
     componentDidMount() {
         var newBoard = [];
-        for (let i = 0; i < HEIGHT; i++){
-            var newRow = [];
-            for (let j = 0; j < WIDTH; j++) {
-                var newNode = <Node row={i} col={j}></Node>;
-                newRow.push(newNode);
+        for (let i = 0; i < 5; i++){
+            for (let j = 0; j < 5; j++) {
+                newBoard.push(createNode(i,j));
             }
-            newBoard.push(newRow);
         }
         this.setState({grid: newBoard});
     }
-
-    createGrid(x, y){
-        /**
-            should find a way to use the mapping function instead of a for loop of divs 
-            each child should get a keyID too 
-        */
-        let table = []
-        let keyIndex = 0; 
-        for (let i = 0; i < x; i++){
-            let children = []
-            for (let j = 0; j < y; j++){
-                keyIndex ++; 
-                children.push(<td><div id="unVisited" key={keyIndex}>{`(${i},${j})`}</div></td>)
-            }
-            table.push(<tr>{children}</tr>)
-        }
-        return table
-    }
-
-
     render() { 
         return (
-            <table>
-                {this.createGrid(8,10)}
-            </table>
+            <div className="container">
+            {/* //grid from componentDidMount is being mapped over with the nodes created in same function     */}
+            {this.state.grid.map((node) => (
+                    <NodeRender
+                        //passing in props 
+                        r = {node.r}
+                        c = {node.c}
+                        isWall = {node.isWall}
+                        isStartNode = {node.isStartNode}
+                        isEndNode = {node.isEndNode}
+                        // isVisited = {node.isVisited}
+                        // previousNode = {node.previousNode}
+
+
+                    />
+                ))
+            }
+            </div>   
         )
     }
+}
+
+const createNode = (r,c)=>{
+        return{
+            r,
+            c,
+            isStartNode: (r === START_ROW && c === START_COLUMN),
+            isEndNode: (r === END_ROW && c === END_COLUMN),
+            isVisited: false, 
+            previousNode: null,
+        };
 }
 
 function updateDistanceAndPrevNode(r, c, oldGrid, curr) {

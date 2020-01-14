@@ -15,7 +15,6 @@ import Board from './components/Board'
         <Grid divided>
           <Grid.Row floated={"left"}>
             <Grid.Column width={12}>
-              <Label>This is where the board component goes lol </Label>
               <Board
               {...{
                 startXCoord,

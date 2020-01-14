@@ -1,0 +1,26 @@
+.node{
+  width: 25px;
+  height: 25px;
+  border-color: black;
+  border-width: 0.25em;
+  border: solid;
+}
+
+.node-finish {
+  background-color: red;
+}
+
+.node-start{
+  background-color: green;
+}
+
+.cell {
+  border-color: black;
+  color: white;
+  font-size: 3rem;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+}
+
+/* need to stack it  */
