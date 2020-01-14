@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Grid, Label } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import {OptionPanel} from './components/OptionPanel.jsx'
 import Board from './components/Board'
 

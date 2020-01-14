@@ -1,8 +1,8 @@
 import React from 'react'
 import './css/Board.css'
 import {NodeRender} from './Node.jsx'
-const WIDTH = 50;
-const HEIGHT = 20;
+const HEIGHT = 30;
+const WIDTH = 30;
 const START_ROW = 1;
 const START_COLUMN = 2; 
 const END_ROW = 4;
@@ -122,34 +122,42 @@ class Board extends React.Component {
     //need to put isVisited
     componentDidMount() {
         var newBoard = [];
-        for (let i = 0; i < 5; i++){
-            for (let j = 0; j < 5; j++) {
-                newBoard.push(createNode(i,j));
+        for (let i = 0; i < WIDTH; i++){
+            const row = []; 
+            for (let j = 0; j < HEIGHT; j++) {
+                row.push(createNode(i,j));
             }
+            newBoard.push(row)
         }
         this.setState({grid: newBoard});
     }
     render() { 
-        return (
-            <div className="container">
-            {/* //grid from componentDidMount is being mapped over with the nodes created in same function     */}
-            {this.state.grid.map((node) => (
-                    <NodeRender
-                        //passing in props 
-                        r = {node.r}
-                        c = {node.c}
-                        isWall = {node.isWall}
-                        isStartNode = {node.isStartNode}
-                        isEndNode = {node.isEndNode}
-                        // isVisited = {node.isVisited}
-                        // previousNode = {node.previousNode}
-
-
-                    />
-                ))
+        return ( 
+            //if you're mapping another map, you need curly braces because you're using a js object
+            //if you're doing html, parenthesis work 
+            <div className="grid">
+            {this.state.grid.map((row) => {
+                return (
+                    <div className="row">
+                    {row.map((node) => (
+                        <NodeRender
+                            //passing in props 
+                            r = {node.r}
+                            c = {node.c}
+                            isStartNode = {node.isStartNode}
+                            isEndNode = {node.isEndNode}
+                            isVisited = {node.isVisited}
+                            previousNode = {node.previousNode}
+                                // isWall = {node.isWall}
+                        />
+                    )
+                )}
+                </div>
+                )
+            })
             }
-            </div>   
-        )
+            </div>
+            )  
     }
 }
 

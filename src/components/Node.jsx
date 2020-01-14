@@ -5,9 +5,6 @@ import './css/Node.css';
 class NodeRender extends Component { 
     render() {
         const { 
-            c, 
-            r, 
-            isWall,
             isStartNode,
             isEndNode
         } = this.props; 
