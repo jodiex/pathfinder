@@ -17,3 +17,8 @@
 .shortest-path {
     background-color: greenyellow;
 }
+
+.table {
+    margin: 2.5rem;
+    margin-left: 3.5rem;
+}

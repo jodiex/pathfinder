@@ -18,52 +18,63 @@ class Board extends React.Component {
         super(props);
         this.state = {
             grid: [],
-            height: 5,
-            width: 5
+            width: 25,
+            height: 18
         };
 
         //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
         //this.findVisitedNodes = this.findVisitedNodes.bind(this);
     }
-    visualize(){
+    async visualize(){
         var visitedNodes = this.findVisitedNodes();
         var shortestPath = this.findShortestPath(visitedNodes[visitedNodes.length - 1]);
         // animation of visited nodes
-        for (let i = 0; i < visitedNodes.length; i++) {
-            let node = visitedNodes[i];
+        let promise = new Promise((resolve) => {
+            for (let i = 0; i < visitedNodes.length; i++) {
+                let node = visitedNodes[i];
+                setTimeout(() => {
+                    document.getElementById(`node-${node.row}${node.col}`).className = "node visited"
+                }, 50 * i);
+            }
+            setTimeout(() => { resolve()}, 50*visitedNodes.length);
+        })
+        await promise;
+
+        // animation of shortest path
+        for (let i = 0; i < shortestPath.length; i++) {
+            let node = shortestPath[i];
             setTimeout(() => {
-                document.getElementById(`node-${node.row}${node.col}`).className = "node visited"
+                document.getElementById(`node-${node.row}${node.col}`).className = "node shortest-path"
             }, 50 * i)
         }
-        // animation of shortest path
-        // setTimeout(() => {
-        //     document.getElementById(`node-${node.row}${node.col}`).className = "node shortest-path"
-        // })
     }
     findVisitedNodes() {
-        var curr = {
-            row: this.props.startXCoord,
-            col: this.props.startYCoord
-        };
-        var end = {
-            row: this.props.endXCoord,
-            col: this.props.endYCoord
-        };
+        var curr = new Node(this.props.startYCoord, this.props.startXCoord);
+        var end = new Node(this.props.endYCoord, this.props.endXCoord)
         var {grid} = this.state;
-        grid[curr.row][curr.col].distance = 0;
+        curr.distance = 0;
+        grid[curr.row][curr.col] = curr;
+        grid[end.row][end.col] = end;
         var visited = [];
         var unvisited = this.getAllNodes(grid);
         while (unvisited.length > 0){
             if (curr.row === end.row && curr.col === end.col) {
+                // if we reached end node
                 visited.push(grid[curr.row][curr.col])
                 return visited;
             }
             if (curr.isWall) {
+                // skip visiting a wall node
                 continue;
+            }
+            if (curr.distance === Infinity) {
+                // if closest node distance is infinity, we are stuck
+                visited.push(grid[curr.row][curr.col])
+                return visited;
             }
             grid[curr.row][curr.col].isVisited = true;
             visited.push(grid[curr.row][curr.col]);
-            // add + 1 to the distance of curr's neighbours and set prevNode to curr
+            // set distance of curr's neighbours to curr.distance + 1 and set prevNode to curr
             this.updateNeighbours(curr, grid);
             grid = this.state.grid;
             // sort unvisited nodes by shortest distance
@@ -110,8 +121,13 @@ class Board extends React.Component {
             grid: newGrid
         })
     }
-    findShortestPath() {
-
+    findShortestPath(node) {
+        var path = []
+        while (node != null) {
+            path.unshift(node);
+            node = node.prevNode
+        }
+        return path
     }
     componentDidMount() {
         var newBoard = [];
@@ -145,7 +161,7 @@ class Board extends React.Component {
 
     render() { 
         return (
-            <table>
+            <table className="table">
                 <tbody>
                     {this.createGrid(this.state.height, this.state.width)}
                 </tbody>

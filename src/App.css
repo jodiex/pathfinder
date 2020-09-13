@@ -1,9 +1,9 @@
-.container {
-    margin: 5px;
-    padding: 5px;
+.optionPanel {
+    margin: 1rem;
+    margin-left: 0;
+    padding: 1rem;
 }
 #header {
-    margin: 10px;
     text-align: center;
 }
 #xcoord {

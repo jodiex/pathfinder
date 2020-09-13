@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {OptionPanel} from './components/OptionPanel.jsx'
 import { Grid, Segment, Header, Dropdown, Label, Divider, Button, Icon} from 'semantic-ui-react';
 import Board from './components/Board'
-
+import './App.css';
 
 
 const algo = [
@@ -37,6 +37,21 @@ const coordinates = [
         key: 2, 
         text: 2, 
         value: 2 
+    },
+    {
+      key: 3,
+      text: 3, 
+      value: 3
+    },
+    {
+        key: 4,
+        text: 4, 
+        value: 4
+    },
+    {
+        key: 5, 
+        text: 5, 
+        value: 5 
     }
 ]
 
@@ -73,85 +88,87 @@ class App extends React.Component {
             </Grid.Column>
 
             <Grid.Column floated={"right"} width={4}>
-            <Segment raised>
-                <Header id='header' size='huge'> PathFinder Visualizer</Header> 
-                <Header id='input' as='h2'> Input </Header>
-                <Label>Please select your pathfinding algorithm</Label>
-                <Dropdown 
-                    placeholder='Select your pathfinding algorithm'
-                    fluid
-                    selection
-                    options={algo}
-                />
-                <Divider/>
-                <div className="coordinates">
-                    <Header id='startNode' as='h2'> Start Node Coordinates </Header>
-                    <Label
-                    >
-                    X Coordinate
-                    <Dropdown
-                        placeholder='0'
-                        button
+              <div className="optionPanel">
+                <Segment raised>
+                    <Header id='header' size='huge'> PathFinder Visualizer</Header> 
+                    <Header id='input' as='h2'> Input </Header>
+                    <Label>Please select your pathfinding algorithm</Label>
+                    <Dropdown 
+                        placeholder='Select your pathfinding algorithm'
                         fluid
                         selection
-                        options={coordinates}
-                        onChange={(e, {value}) => this.setState({startXCoord: {value}=value})}
+                        options={algo}
                     />
-                    </Label>
-                    <Label>
-                    Y Coordinate
-                    <Dropdown
-                        placeholder='0'
-                        button
-                        fluid
-                        selection
-                        options={coordinates}
-                        onChange={(e, {value}) => this.setState({startYCoord: {value}=value})}
-                    />
-                    </Label>
+                    <Divider/>
+                    <div className="coordinates">
+                        <Header id='startNode' as='h2'> Start Node Coordinates </Header>
+                        <Label
+                        >
+                        X Coordinate
+                        <Dropdown
+                            placeholder='0'
+                            button
+                            fluid
+                            selection
+                            options={coordinates}
+                            onChange={(e, {value}) => this.setState({startXCoord: {value}=value})}
+                        />
+                        </Label>
+                        <Label>
+                        Y Coordinate
+                        <Dropdown
+                            placeholder='0'
+                            button
+                            fluid
+                            selection
+                            options={coordinates}
+                            onChange={(e, {value}) => this.setState({startYCoord: {value}=value})}
+                        />
+                        </Label>
 
-                    <Header id='endNode' as='h2'> End Node Coordinates </Header>
+                        <Header id='endNode' as='h2'> End Node Coordinates </Header>
 
-                    <Label>
-                    X Coordinate
-                    <Dropdown
-                        placeholder='0'
-                        button
-                        fluid
-                        selection
-                        options={coordinates}
-                        onChange={(e, {value}) => this.setState({endXCoord: {value}=value})}
-                    />
-                    </Label>
-                    <Label>
-                    Y Coordinate
-                    <Dropdown
-                        placeholder='0'
-                        button
-                        fluid
-                        selection
-                        options={coordinates}
-                        onChange={(e, {value}) => this.setState({endYCoord: {value}=value})}
-                    />
-                    </Label>
-                    <br/><br/>
-                </div>
-                <Divider />
-                <Button.Group vertical widths='5' id='buttonGroup'>
-                    <Button id='run' icon labelPosition='left' onClick={this.handleClick}>
-                        Run 
-                        <Icon name ='play' />
-                    </Button>
-                    <Button id='pause' icon labelPosition='left'>
-                        Pause 
-                        <Icon name ='pause' />
-                    </Button>
-                    <Button id='clear' icon labelPosition='left'>
-                        Clear
-                        <Icon name ='eraser' />
-                    </Button>
-                </Button.Group>
-            </Segment>
+                        <Label>
+                        X Coordinate
+                        <Dropdown
+                            placeholder='0'
+                            button
+                            fluid
+                            selection
+                            options={coordinates}
+                            onChange={(e, {value}) => this.setState({endXCoord: {value}=value})}
+                        />
+                        </Label>
+                        <Label>
+                        Y Coordinate
+                        <Dropdown
+                            placeholder='0'
+                            button
+                            fluid
+                            selection
+                            options={coordinates}
+                            onChange={(e, {value}) => this.setState({endYCoord: {value}=value})}
+                        />
+                        </Label>
+                        <br/><br/>
+                    </div>
+                    <Divider />
+                    <Button.Group vertical widths='5' id='buttonGroup'>
+                        <Button id='run' icon labelPosition='left' onClick={this.handleClick}>
+                            Run 
+                            <Icon name ='play' />
+                        </Button>
+                        <Button id='pause' icon labelPosition='left'>
+                            Pause 
+                            <Icon name ='pause' />
+                        </Button>
+                        <Button id='clear' icon labelPosition='left'>
+                            Clear
+                            <Icon name ='eraser' />
+                        </Button>
+                    </Button.Group>
+                </Segment>
+              </div>
             </Grid.Column>
           </Grid.Row>
         </Grid>
