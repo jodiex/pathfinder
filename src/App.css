@@ -4,18 +4,14 @@
     padding: 1rem;
 }
 #header {
+    margin-top: 1rem;
     text-align: center;
 }
-#xcoord {
-    width: 50%;
-    float: left;
-}
-#ycoord{
-    width: 50%;
-    float: left;
-}
-#buttonGroup{
+#buttonGroup {
     text-align: center;
+}
+#label {
+    margin-bottom: 1rem;
 }
 
 

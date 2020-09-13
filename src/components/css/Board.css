@@ -1,7 +1,7 @@
 .node {
     border: solid;
     border-width: 2px;
-    border-color:black;
+    border-color:grey;
     width: 3rem;
     height: 3rem;
     margin: -3px;
@@ -11,14 +11,22 @@
 }
 
 .visited {
-    background-color: blue;
+    background-color: #c1eaf8;
 }
 
 .shortest-path {
-    background-color: greenyellow;
+    background-color: #f8d487;
 }
 
 .table {
     margin: 2.5rem;
-    margin-left: 3.5rem;
+    margin-left: 3rem;
+}
+
+.start {
+    background-color: #55d695;
+}
+
+.end {
+    background-color: #fe6f69;
 }

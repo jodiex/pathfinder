@@ -25,7 +25,16 @@ class Board extends React.Component {
         //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
         //this.findVisitedNodes = this.findVisitedNodes.bind(this);
     }
+    addStartEndNodes() {
+        let startRow = this.props.startYCoord;
+        let startCol = this.props.startXCoord;
+        let endRow = this.props.endYCoord;
+        let endCol = this.props.endXCoord;
+        document.getElementById(`node-${startRow}-${startCol}`).classList.add("start");
+        document.getElementById(`node-${endRow}-${endCol}`).classList.add("end");
+    }
     async visualize(){
+        this.addStartEndNodes();
         var visitedNodes = this.findVisitedNodes();
         var shortestPath = this.findShortestPath(visitedNodes[visitedNodes.length - 1]);
         // animation of visited nodes
@@ -33,7 +42,8 @@ class Board extends React.Component {
             for (let i = 0; i < visitedNodes.length; i++) {
                 let node = visitedNodes[i];
                 setTimeout(() => {
-                    document.getElementById(`node-${node.row}${node.col}`).className = "node visited"
+                    document.getElementById(`node-${node.row}-${node.col}`).classList.remove("unvisited")
+                    document.getElementById(`node-${node.row}-${node.col}`).classList.add("visited")
                 }, 50 * i);
             }
             setTimeout(() => { resolve()}, 50*visitedNodes.length);
@@ -44,13 +54,14 @@ class Board extends React.Component {
         for (let i = 0; i < shortestPath.length; i++) {
             let node = shortestPath[i];
             setTimeout(() => {
-                document.getElementById(`node-${node.row}${node.col}`).className = "node shortest-path"
+                document.getElementById(`node-${node.row}-${node.col}`).classList.remove("visited")
+                document.getElementById(`node-${node.row}-${node.col}`).classList.add("shortest-path")
             }, 50 * i)
         }
     }
     findVisitedNodes() {
         var curr = new Node(this.props.startYCoord, this.props.startXCoord);
-        var end = new Node(this.props.endYCoord, this.props.endXCoord)
+        var end = new Node(this.props.endYCoord, this.props.endXCoord);
         var {grid} = this.state;
         curr.distance = 0;
         grid[curr.row][curr.col] = curr;
@@ -152,7 +163,7 @@ class Board extends React.Component {
             let children = []
             for (let j = 0; j < y; j++){
                 keyIndex ++; 
-                children.push(<td><div className="node unvisited" id={`node-${i}${j}`}></div></td>)
+                children.push(<td><div className="node unvisited" id={`node-${i}-${j}`}></div></td>)
             }
             table.push(<tr>{children}</tr>)
         }

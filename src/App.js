@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
-import {OptionPanel} from './components/OptionPanel.jsx'
-import { Grid, Segment, Header, Dropdown, Label, Divider, Button, Icon} from 'semantic-ui-react';
+import React from 'react';
+import { Grid, Segment, Header, Dropdown, Label, Divider, Button, Icon, Input} from 'semantic-ui-react';
 import Board from './components/Board'
 import './App.css';
 
@@ -22,38 +21,6 @@ const algo = [
     value: 'A-Star'
 }
 ]
-const coordinates = [
-    {
-        key: 0,
-        text: 0, 
-        value: 0
-    },
-    {
-        key: 1,
-        text: 1, 
-        value: 1
-    },
-    {
-        key: 2, 
-        text: 2, 
-        value: 2 
-    },
-    {
-      key: 3,
-      text: 3, 
-      value: 3
-    },
-    {
-        key: 4,
-        text: 4, 
-        value: 4
-    },
-    {
-        key: 5, 
-        text: 5, 
-        value: 5 
-    }
-]
 
 class App extends React.Component {
   constructor(props){
@@ -65,13 +32,12 @@ class App extends React.Component {
       startYCoord: 0,
       endYCoord: 0
     }
-    // this.handleClick = this.handleClick.bind(this);
   }
       
   handleClick = () => {
     this.child.current.visualize();
   }
-    
+
   render () {
     return (
       <div className="App">
@@ -92,7 +58,7 @@ class App extends React.Component {
                 <Segment raised>
                     <Header id='header' size='huge'> PathFinder Visualizer</Header> 
                     <Header id='input' as='h2'> Input </Header>
-                    <Label>Please select your pathfinding algorithm</Label>
+                    <Label id='label'>Please select your pathfinding algorithm</Label>
                     <Dropdown 
                         placeholder='Select your pathfinding algorithm'
                         fluid
@@ -101,54 +67,82 @@ class App extends React.Component {
                     />
                     <Divider/>
                     <div className="coordinates">
-                        <Header id='startNode' as='h2'> Start Node Coordinates </Header>
+                        <Header id='startNode' as='h2'>Start Node</Header>
                         <Label
                         >
                         X Coordinate
-                        <Dropdown
-                            placeholder='0'
-                            button
-                            fluid
-                            selection
-                            options={coordinates}
-                            onChange={(e, {value}) => this.setState({startXCoord: {value}=value})}
-                        />
-                        </Label>
+                        <Input
+                          type="number"
+                          placeholder='0'
+                          button
+                          fluid
+                          max={24}
+                          min={0}
+                          onChange={(e, {value}) => {
+                            value=parseInt(value);
+                            if (value > 24) value = 24
+                            if (value < 0) value = 0
+                            this.setState({startXCoord: {value}=value});
+                          }
+                        }><input /></Input>
+                        Max: 24
+                          </Label>
                         <Label>
                         Y Coordinate
-                        <Dropdown
-                            placeholder='0'
-                            button
-                            fluid
-                            selection
-                            options={coordinates}
-                            onChange={(e, {value}) => this.setState({startYCoord: {value}=value})}
-                        />
+                        <Input
+                          type="number"
+                          placeholder='0'
+                          button
+                          fluid
+                          max={17}
+                          min={0}
+                          onChange={(e, {value}) => {
+                            value=parseInt(value);
+                            if (value > 17) value = 17
+                            if (value < 0) value = 0
+                            this.setState({startYCoord: {value}=value});
+                          }
+                        }><input /></Input>
+                        Max: 17
                         </Label>
 
-                        <Header id='endNode' as='h2'> End Node Coordinates </Header>
+                        <Header id='endNode' as='h2'>Destination Node </Header>
 
                         <Label>
                         X Coordinate
-                        <Dropdown
-                            placeholder='0'
-                            button
-                            fluid
-                            selection
-                            options={coordinates}
-                            onChange={(e, {value}) => this.setState({endXCoord: {value}=value})}
-                        />
+                        <Input
+                          type="number"
+                          placeholder='0'
+                          button
+                          fluid
+                          max={24}
+                          min={0}
+                          onChange={(e, {value}) => {
+                            value=parseInt(value);
+                            if (value > 24) value = 24
+                            if (value < 0) value = 0
+                            this.setState({endXCoord: {value}=value});
+                          }
+                        }><input /></Input>
+                        Max: 24
                         </Label>
                         <Label>
                         Y Coordinate
-                        <Dropdown
-                            placeholder='0'
-                            button
-                            fluid
-                            selection
-                            options={coordinates}
-                            onChange={(e, {value}) => this.setState({endYCoord: {value}=value})}
-                        />
+                        <Input
+                          type="number"
+                          placeholder='0'
+                          button
+                          fluid
+                          max={17}
+                          min={0}
+                          onChange={(e, {value}) => {
+                            value=parseInt(value);
+                            if (value > 17) value = 17
+                            if (value < 0) value = 0
+                            this.setState({endYCoord: {value}=value});
+                          }
+                        }><input /></Input>
+                        Max: 17
                         </Label>
                         <br/><br/>
                     </div>
