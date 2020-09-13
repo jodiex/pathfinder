@@ -1,6 +1,19 @@
-#unVisited {
+.node {
     border: solid;
     border-width: 2px;
     border-color:black;
-    background:grey;
+    width: 3rem;
+    height: 3rem;
+    margin: -3px;
+}
+.unvisited {
+    background-color:white;
+}
+
+.visited {
+    background-color: blue;
+}
+
+.shortest-path {
+    background-color: greenyellow;
 }

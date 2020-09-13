@@ -1,11 +1,9 @@
 import React from 'react'
 import './css/Board.css'
-const WIDTH = 50;
-const HEIGHT = 20;
 
 
 class Node {
-    construtor (r, c){
+    constructor (r, c){
         this.row = r;
         this.col = c;
         this.distance= Infinity;
@@ -19,35 +17,56 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            grid : [],
-            // startNode: {},
-            // endNode: {}
+            grid: [],
+            height: 5,
+            width: 5
         };
 
         //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
-        //this.findShortestPath = this.findShortestPath.bind(this);
+        //this.findVisitedNodes = this.findVisitedNodes.bind(this);
     }
     visualize(){
-        var nodesInOrder = this.findShortestPath();
-        // animation function
+        var visitedNodes = this.findVisitedNodes();
+        var shortestPath = this.findShortestPath(visitedNodes[visitedNodes.length - 1]);
+        // animation of visited nodes
+        for (let i = 0; i < visitedNodes.length; i++) {
+            let node = visitedNodes[i];
+            setTimeout(() => {
+                document.getElementById(`node-${node.row}${node.col}`).className = "node visited"
+            }, 50 * i)
+        }
+        // animation of shortest path
+        // setTimeout(() => {
+        //     document.getElementById(`node-${node.row}${node.col}`).className = "node shortest-path"
+        // })
     }
-    findShortestPath() {
-        var curr = this.state.startNode;
-        var end = this.state.endNode;
+    findVisitedNodes() {
+        var curr = {
+            row: this.props.startXCoord,
+            col: this.props.startYCoord
+        };
+        var end = {
+            row: this.props.endXCoord,
+            col: this.props.endYCoord
+        };
         var {grid} = this.state;
         grid[curr.row][curr.col].distance = 0;
         var visited = [];
         var unvisited = this.getAllNodes(grid);
         while (unvisited.length > 0){
             if (curr.row === end.row && curr.col === end.col) {
+                visited.push(grid[curr.row][curr.col])
                 return visited;
             }
-            if (curr.isWall){
+            if (curr.isWall) {
                 continue;
             }
             grid[curr.row][curr.col].isVisited = true;
             visited.push(grid[curr.row][curr.col]);
-            grid = this.updateNeighbours(curr, grid); // add + 1 to the distance of its neighbours and set prevNode to curr
+            // add + 1 to the distance of curr's neighbours and set prevNode to curr
+            this.updateNeighbours(curr, grid);
+            grid = this.state.grid;
+            // sort unvisited nodes by shortest distance
             unvisited = sortByDistance(unvisited);
             curr = unvisited.shift();
         }
@@ -55,8 +74,8 @@ class Board extends React.Component {
     }
     getAllNodes(grid){
         var allNodes = [];
-        for (let i = 0; i < HEIGHT; i++) {
-            for (let j = 0; j < WIDTH; j++) {
+        for (let i = 0; i < this.state.height; i++) {
+            for (let j = 0; j < this.state.width; j++) {
                 allNodes.push(grid[i][j]);
             }
         }
@@ -67,63 +86,45 @@ class Board extends React.Component {
         var c = curr.col;
         var newGrid = oldGrid;
         var neighbour = null;
-        if (r < HEIGHT) {
-            neighbour = updateDistanceAndPrevNode(r+1, c, oldGrid, curr);
+        if (r < this.state.height - 1) {
+            neighbour = oldGrid[r+1][c];
+            neighbour = updateDistanceAndPrevNode(neighbour, curr);
             newGrid[r+1][c] = neighbour;
         }
         if (r > 0) {
-            neighbour = updateDistanceAndPrevNode(r-1, c, oldGrid, curr);
+            neighbour = oldGrid[r-1][c];
+            neighbour = updateDistanceAndPrevNode(neighbour, curr);
             newGrid[r-1][c] = neighbour;
         }
-        if (c < WIDTH) {
-            neighbour = updateDistanceAndPrevNode(r, c+1, oldGrid, curr);
+        if (c < this.state.width - 1) {
+            neighbour = oldGrid[r][c+1];
+            neighbour = updateDistanceAndPrevNode(neighbour, curr);
             newGrid[r][c+1] = neighbour;
         }
         if (c > 0) {
-            neighbour = updateDistanceAndPrevNode(r, c-1, oldGrid, curr);
+            neighbour = oldGrid[r][c-1];
+            neighbour = updateDistanceAndPrevNode(neighbour, curr);
             newGrid[r][c-1] = neighbour;
         }
-        return newGrid;
-        // for (let i = 0; i < HEIGHT; i++){
-        //     if (i < r-1 && i > r+1) {
-        //         var row = oldGrid[r];
-        //         newGrid.push(row);
-        //     }
-        //     else { // i == r-1 OR i == r+1 OR i == r
-        //         var row = [];
-        //         for(let j = 0; j < WIDTH; j++) {
-        //             if (((j == c-1 || j == c+1) && i == r) || ((i == r-1 || i == r+1) && j == c)) {
-        //                 var neighbour = oldGrid[i][j];
-        //                 if (!neighbour.state.isVisited && !neighbour.state.isWall) { //this won't work i think because Node is now a react component and isVisited, etc. are in state
-        //                     neighbour.setState({
-        //                         distance: curr.state.distance + 1,
-        //                         prevNode: curr,
-        //                     });
-        //                 }
-        //                 row.push(neighbour);
-        //             }
-        //             else {
-        //                 row.push(oldGrid[i][j]);
-        //             }
-        //         newGrid.push(row);
-        //         }
-        //     }
-        // }
-        // this.setState({grid: newGrid});
+        this.setState({
+            grid: newGrid
+        })
+    }
+    findShortestPath() {
+
     }
     componentDidMount() {
         var newBoard = [];
-        for (let i = 0; i < HEIGHT; i++){
-            var newRow = [];
-            for (let j = 0; j < WIDTH; j++) {
-                var newNode = <Node row={i} col={j}></Node>;
+        for (let i = 0; i < this.state.height; i++){
+            let newRow = [];
+            for (let j = 0; j < this.state.width; j++) {
+                let newNode = new Node(i,j);
                 newRow.push(newNode);
             }
             newBoard.push(newRow);
         }
         this.setState({grid: newBoard});
     }
-
     createGrid(x, y){
         /**
             should find a way to use the mapping function instead of a for loop of divs 
@@ -135,25 +136,25 @@ class Board extends React.Component {
             let children = []
             for (let j = 0; j < y; j++){
                 keyIndex ++; 
-                children.push(<td><div id="unVisited" key={keyIndex}>{`(${i},${j})`}</div></td>)
+                children.push(<td><div className="node unvisited" id={`node-${i}${j}`}></div></td>)
             }
             table.push(<tr>{children}</tr>)
         }
         return table
     }
 
-
     render() { 
         return (
             <table>
-                {this.createGrid(8,10)}
+                <tbody>
+                    {this.createGrid(this.state.height, this.state.width)}
+                </tbody>
             </table>
         )
     }
 }
 
-function updateDistanceAndPrevNode(r, c, oldGrid, curr) {
-    var neighbour = oldGrid[r][c];
+function updateDistanceAndPrevNode(neighbour, curr) {
     if (!neighbour.isVisited && !neighbour.isWall) {
         neighbour.distance = curr.distance + 1;
         neighbour.prevNode = curr;
