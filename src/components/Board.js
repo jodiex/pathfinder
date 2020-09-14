@@ -103,7 +103,6 @@ class Board extends React.Component {
             }
             if (curr.distance === Infinity) {
                 // if closest node distance is infinity, we are stuck
-                visited.push(grid[curr.row][curr.col])
                 return visited;
             }
             if (curr.isWall) {
