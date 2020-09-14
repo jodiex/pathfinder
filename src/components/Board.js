@@ -176,7 +176,7 @@ class Board extends React.Component {
                 let newNode = new Node(i,j);
                 newRow.push(newNode);
             }
-            newBoard.push(newRow)
+            newBoard.push(newRow);
         }
         this.setState({grid: newBoard});
     }
@@ -193,8 +193,9 @@ class Board extends React.Component {
                 keyIndex ++; 
                 children.push(<td><div className="node unvisited" id={`node-${i}-${j}`} onClick={() => this.addWall(i,j)}></div></td>)
             }
-            table.push(children);
+            table.push(<tr>{children}</tr>)
         }
+        return table
     }
     clearGrid() {
         // reset grid in state
