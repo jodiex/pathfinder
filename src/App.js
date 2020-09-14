@@ -30,12 +30,17 @@ class App extends React.Component {
       startXCoord: 0,
       endXCoord: 0,
       startYCoord: 0,
-      endYCoord: 0
+      endYCoord: 0,
+      speed: 50
     }
   }
       
-  handleClick = () => {
+  handleRun = () => {
     this.child.current.visualize();
+  }
+
+  handleClear = () => {
+    this.child.current.clearGrid();
   }
 
   render () {
@@ -50,6 +55,7 @@ class App extends React.Component {
               endXCoord={this.state.endXCoord}
               startYCoord={this.state.startYCoord}
               endYCoord={this.state.endYCoord}
+              speed={this.state.speed}
               />
             </Grid.Column>
 
@@ -68,8 +74,7 @@ class App extends React.Component {
                     <Divider/>
                     <div className="coordinates">
                         <Header id='startNode' as='h2'>Start Node</Header>
-                        <Label
-                        >
+                        <Label>
                         X Coordinate
                         <Input
                           type="number"
@@ -146,17 +151,30 @@ class App extends React.Component {
                         </Label>
                         <br/><br/>
                     </div>
+                    <Label>Click on a node to add or remove a wall.</Label>
                     <Divider />
+                    <Label id='label'>
+                        Animation Speed
+                        <Input
+                          type="number"
+                          placeholder='50'
+                          button
+                          fluid
+                          min={1}
+                          onChange={(e, {value}) => {
+                            value=parseInt(value);
+                            if (value < 1) value = 1
+                            this.setState({speed: {value}=value});
+                          }
+                        }><input /></Input>
+                        Higher speed is slower
+                    </Label>
                     <Button.Group vertical widths='5' id='buttonGroup'>
-                        <Button id='run' icon labelPosition='left' onClick={this.handleClick}>
+                        <Button id='run' icon labelPosition='left' onClick={this.handleRun}>
                             Run 
                             <Icon name ='play' />
                         </Button>
-                        <Button id='pause' icon labelPosition='left'>
-                            Pause 
-                            <Icon name ='pause' />
-                        </Button>
-                        <Button id='clear' icon labelPosition='left'>
+                        <Button id='clear' icon labelPosition='left' onClick={this.handleClear}>
                             Clear
                             <Icon name ='eraser' />
                         </Button>

@@ -4,14 +4,14 @@
     padding: 1rem;
 }
 #header {
-    margin-top: 1rem;
     text-align: center;
 }
 #buttonGroup {
     text-align: center;
 }
+#input {
+    margin-top: 0;
+}
 #label {
     margin-bottom: 1rem;
 }
-
-

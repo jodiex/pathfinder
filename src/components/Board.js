@@ -1,7 +1,6 @@
 import React from 'react'
 import './css/Board.css'
 
-
 class Node {
     constructor (r, c){
         this.row = r;
@@ -21,32 +20,54 @@ class Board extends React.Component {
             width: 25,
             height: 18
         };
-
-        //this.visualize = this.visualize.bind(this); don't think i need to bind, but i'm not 100% sure when bind is used.
-        //this.findVisitedNodes = this.findVisitedNodes.bind(this);
     }
     addStartEndNodes() {
         let startRow = this.props.startYCoord;
         let startCol = this.props.startXCoord;
         let endRow = this.props.endYCoord;
         let endCol = this.props.endXCoord;
+        document.getElementById(`node-${startRow}-${startCol}`).classList.remove("wall");
         document.getElementById(`node-${startRow}-${startCol}`).classList.add("start");
+        document.getElementById(`node-${endRow}-${endCol}`).classList.remove("wall");
         document.getElementById(`node-${endRow}-${endCol}`).classList.add("end");
     }
+    addWall(row, col) {
+        if ((row !== this.props.startYCoord || col !== this.props.startXCoord)
+        && (row !== this.props.endYCoord || col !== this.props.endXCoord)) {
+            var {grid} = this.state;
+            var wall = new Node(row, col);
+            // toggle wall in grid
+            wall.isWall = !grid[row][col].isWall;
+            grid[row][col] = wall;
+            this.setState({ grid: grid });
+
+            // toggle grey wall
+            if (wall.isWall) {
+                document.getElementById(`node-${row}-${col}`).classList.remove("unvisited")
+                document.getElementById(`node-${row}-${col}`).classList.remove("visited")
+                document.getElementById(`node-${row}-${col}`).classList.add("wall")
+            } else {
+                document.getElementById(`node-${row}-${col}`).classList.remove("wall")
+                document.getElementById(`node-${row}-${col}`).classList.add("unvisited")
+            }
+        }
+    }
     async visualize(){
-        this.addStartEndNodes();
         var visitedNodes = this.findVisitedNodes();
         var shortestPath = this.findShortestPath(visitedNodes[visitedNodes.length - 1]);
+
         // animation of visited nodes
+        var speed = this.props.speed;
+        this.addStartEndNodes();
         let promise = new Promise((resolve) => {
             for (let i = 0; i < visitedNodes.length; i++) {
                 let node = visitedNodes[i];
                 setTimeout(() => {
                     document.getElementById(`node-${node.row}-${node.col}`).classList.remove("unvisited")
                     document.getElementById(`node-${node.row}-${node.col}`).classList.add("visited")
-                }, 50 * i);
+                }, speed * i);
             }
-            setTimeout(() => { resolve()}, 50*visitedNodes.length);
+            setTimeout(() => { resolve()}, speed * visitedNodes.length);
         })
         await promise;
 
@@ -56,7 +77,7 @@ class Board extends React.Component {
             setTimeout(() => {
                 document.getElementById(`node-${node.row}-${node.col}`).classList.remove("visited")
                 document.getElementById(`node-${node.row}-${node.col}`).classList.add("shortest-path")
-            }, 50 * i)
+            }, speed * i)
         }
     }
     findVisitedNodes() {
@@ -68,20 +89,26 @@ class Board extends React.Component {
         grid[end.row][end.col] = end;
         var visited = [];
         var unvisited = this.getAllNodes(grid);
-        while (unvisited.length > 0){
+        var max = 0;
+        while (unvisited.length > 0 && max <= 450){
+            max++;
+            console.log(max + '-----')
+            console.log(curr.row + ' ' + curr.col)
+            console.log(curr.distance)
+            console.log(curr.isWall)
             if (curr.row === end.row && curr.col === end.col) {
                 // if we reached end node
+                visited.push(grid[curr.row][curr.col])
+                return visited;
+            }
+            if (curr.distance === Infinity) {
+                // if closest node distance is infinity, we are stuck
                 visited.push(grid[curr.row][curr.col])
                 return visited;
             }
             if (curr.isWall) {
                 // skip visiting a wall node
                 continue;
-            }
-            if (curr.distance === Infinity) {
-                // if closest node distance is infinity, we are stuck
-                visited.push(grid[curr.row][curr.col])
-                return visited;
             }
             grid[curr.row][curr.col].isVisited = true;
             visited.push(grid[curr.row][curr.col]);
@@ -90,6 +117,7 @@ class Board extends React.Component {
             grid = this.state.grid;
             // sort unvisited nodes by shortest distance
             unvisited = sortByDistance(unvisited);
+            // set curr to unvisited node with smallest distance
             curr = unvisited.shift();
         }
         return visited;
@@ -163,11 +191,31 @@ class Board extends React.Component {
             let children = []
             for (let j = 0; j < y; j++){
                 keyIndex ++; 
-                children.push(<td><div className="node unvisited" id={`node-${i}-${j}`}></div></td>)
+                children.push(<td><div className="node unvisited" id={`node-${i}-${j}`} onClick={() => this.addWall(i,j)}></div></td>)
             }
             table.push(<tr>{children}</tr>)
         }
         return table
+    }
+    clearGrid() {
+        // reset grid in state
+        var newBoard = [];
+        for (let i = 0; i < this.state.height; i++){
+            let newRow = [];
+            for (let j = 0; j < this.state.width; j++) {
+                let newNode = new Node(i,j);
+                newRow.push(newNode);
+            }
+            newBoard.push(newRow);
+        }
+        this.setState({grid: newBoard});
+
+        // reset animated grid
+        for (let i = 0; i < this.state.height; i++){
+            for (let j = 0; j < this.state.width; j++){
+                document.getElementById(`node-${i}-${j}`).className = "node unvisited"
+            }
+        }
     }
 
     render() { 
