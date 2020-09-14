@@ -1,0 +1,7 @@
+.grid{
+    margin: 1%;
+    display:inline-grid;
+}
+.row{
+    margin: -4px;
+}

@@ -1,14 +1,12 @@
 import React from 'react';
 
-const WIDTH = 50;
-const HEIGHT = 20;
 
 class Node {
     construtor (r, c){
         this.row = r;
         this.col = c;
         this.distance= Infinity;
-        this.isWall = false;
+        // this.isWall = false;
         this.isVisited= false;
         this.prevNode = null;
     }
@@ -117,30 +115,54 @@ class Board extends React.Component {
     }
     componentDidMount() {
         var newBoard = [];
-        for (let i = 0; i < HEIGHT; i++){
-            var newRow = [];
-            for (let j = 0; j < WIDTH; j++) {
-                var newNode = <Node row={i} col={j}></Node>;
-                newRow.push(newNode);
+        for (let i = 0; i < WIDTH; i++){
+            const row = []; 
+            for (let j = 0; j < HEIGHT; j++) {
+                row.push(createNode(i,j));
             }
-            newBoard.push(newRow);
+            newBoard.push(row)
         }
         this.setState({grid: newBoard});
     }
-    render() {
-        const row = <div className="row">
-            {()}
-        </div>;
-        return (
-            <div className="board">
-                {/* grid.map((row) =>
+    render() { 
+        return ( 
+            //if you're mapping another map, you need curly braces because you're using a js object
+            //if you're doing html, parenthesis work 
+            <div className="grid">
+            {this.state.grid.map((row) => {
                 return (
-                    row.map(element) =>
-                    return <Node row={i} col={j}></Node>
-                )) */}
+                    <div className="row">
+                    {row.map((node) => (
+                        <NodeRender
+                            //passing in props 
+                            r = {node.r}
+                            c = {node.c}
+                            isStartNode = {node.isStartNode}
+                            isEndNode = {node.isEndNode}
+                            isVisited = {node.isVisited}
+                            previousNode = {node.previousNode}
+                                // isWall = {node.isWall}
+                        />
+                    )
+                )}
+                </div>
+                )
+            })
+            }
             </div>
-        )
+            )  
     }
+}
+
+const createNode = (r,c)=>{
+        return{
+            r,
+            c,
+            isStartNode: (r === START_ROW && c === START_COLUMN),
+            isEndNode: (r === END_ROW && c === END_COLUMN),
+            isVisited: false, 
+            previousNode: null,
+        };
 }
 
 function updateDistanceAndPrevNode(r, c, oldGrid, curr) {
