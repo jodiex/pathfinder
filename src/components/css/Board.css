@@ -1,7 +1,36 @@
-.grid{
-    margin: 1%;
-    display:inline-grid;
+.node {
+    border: solid;
+    border-width: 2px;
+    border-color:grey;
+    width: 3rem;
+    height: 3rem;
+    margin: -3px;
 }
-.row{
-    margin: -4px;
+.unvisited {
+    background-color:white;
+}
+
+.visited {
+    background-color: #c1eaf8;
+}
+
+.shortest-path {
+    background-color: #f8d487;
+}
+
+.table {
+    margin: 2.5rem;
+    margin-left: 3rem;
+}
+
+.start {
+    background-color: #55d695;
+}
+
+.end {
+    background-color: #fe6f69;
+}
+
+.wall {
+    background-color: darkgrey;
 }

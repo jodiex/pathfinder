@@ -1,2 +1,17 @@
-
-
+.optionPanel {
+    margin: 1rem;
+    margin-left: 0;
+    padding: 1rem;
+}
+#header {
+    text-align: center;
+}
+#buttonGroup {
+    text-align: center;
+}
+#input {
+    margin-top: 0;
+}
+#label {
+    margin-bottom: 1rem;
+}
